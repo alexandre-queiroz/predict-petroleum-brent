@@ -1,7 +1,16 @@
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.model_selection import train_test_split
 import streamlit as st
 import pandas as pd
 import requests
 import plotly.express as px
+import plotly.graph_objects as go
+import numpy as np
+import joblib
+
+model = joblib.load('new_model_ml.pkl')
+
 
 st.set_page_config(layout="wide")
 
@@ -60,6 +69,7 @@ def process_fob(data):
     return df
 
 
+@st.cache_data
 def get_renewable_energy_data():
     url = "https://api.eia.gov/v2/international/data/"
     headers = {
@@ -75,6 +85,7 @@ def get_renewable_energy_data():
         return None
 
 
+@st.cache_data
 def get_petroleum_stock():
     url = "https://api.eia.gov/v2/international/data/"
     headers = {
@@ -90,6 +101,7 @@ def get_petroleum_stock():
         return None
 
 
+@st.cache_data
 def get_consumption():
     url = "https://api.eia.gov/v2/international/data/"
     headers = {
@@ -442,11 +454,12 @@ elif st.session_state.selected_option == 'stock':
 
 elif st.session_state.selected_option == 'consumption':
 
-    st.title("Como o consumo de petróleo afeta o valor do petróleo? - Demanda e Oferta\n\n")
+    st.title(
+        "Como o consumo de petróleo afeta o valor do petróleo? - Demanda e Oferta\n\n")
     st.markdown("Ao final de 2019, as condições da indústria mundial do petróleo indicavam a continuidade, no curto prazo, da dinâmica até então vigente – um equilíbrio tênue entre oferta e demanda que manteve os preços spot do petróleo Brent em relativa estabilidade, oscilando entre US$ 60/b e US$ 70/b. Contudo, os primeiros meses de 2020 foram marcados por eventos relevantes que acarretaram variações significativas nos preços internacionais do petróleo.\n\n"
                 "Medidas de distanciamento social e restrições à mobilidade, visando à redução da circulação de pessoas, têm sido amplamente adotadas em grande parte do mundo como prevenção à pandemia de Covid-19. Embora variem em espectro, tais ações têm impactado a mobilidade, com consequências sobre consumo, serviços e atividade industrial, reduzindo o nível da atividade econômica mundial. Assim, a pandemia tem infligido efeitos consideráveis sobre a demanda mundial de petróleo. As atividades dos transportes rodoviários de passageiros e aéreo foram as mais afetadas pela ampla adoção de medidas de restrição à mobilidade no mundo, levando a reduções históricas no consumo global de gasolina e de querosene de aviação (QAV) (IEA, 2020a).\n\n"
                 "Ao mesmo tempo em que a demanda foi severamente impactada, a indústria do petróleo observou alterações na dinâmica da oferta mundial. O acordo para limitar a produção entre países-membros da Organização dos Países Exportadores de Petróleo (OPEP) e outros grandes produtores, em especial a Rússia, não foi renovado no início de março de 2020. Em abril, a Arábia Saudita anunciou o aumento da sua produção para mais de 12 milhões b/d, retomando a política de disputa de mercado. Em seguida, a OPEP+ (grupo formado pelos membros da OPEP, Rússia e outros países produtores) fechou acordo para a redução da sua oferta de petróleo, inicialmente com cortes de 9,7 milhões b/d a partir de maio. Simultaneamente, retrações adicionais de produção foram observadas em outros países, com destaque para Estados Unidos e Canadá (IEA, 2020a).\n")
-    
+
     consumption_data = get_consumption()
     df4 = pd.DataFrame(consumption_data['response']['data'])
     df4 = df4[["period", "productName", "value"]]
@@ -464,7 +477,6 @@ elif st.session_state.selected_option == 'consumption':
     # Exibindo o gráfico
     st.plotly_chart(fig, use_container_width=True)
 
-
     st.markdown("Abaixo incluímos um gráfico que apresenta a progressão de Oferta e Demanda Mundial do Petróleo ao longo de 7 trimestres. \n")
     st.image("assets/oferta_demanda.jpg")
 
@@ -474,15 +486,17 @@ elif st.session_state.selected_option == 'consumption':
 elif st.session_state.selected_option == 'glossary':
     st.markdown("<br>", unsafe_allow_html=True)
     st.image("assets/glossario.jpg")
- 
+
     st.title("Glossário")
 
-    st.markdown("#### OCDE (Organização para a Cooperação e Desenvolvimento Econômico):\n\n")
+    st.markdown(
+        "#### OCDE (Organização para a Cooperação e Desenvolvimento Econômico):\n\n")
     "Organização para a Cooperação e Desenvolvimento Econômico é uma organização econômica intergovernamental com 38 países membros, fundada em 1961 para estimular o progresso econômico e o comércio mundial.\n\n"
     "É um fórum de países que se descrevem comprometidos com a democracia e a economia de mercado, oferecendo uma plataforma para comparar experiências políticas, buscar respostas para problemas comuns, identificar boas práticas e coordenar as políticas domésticas e internacionais de seus membros. A maioria dos membros da OCDE é formada por economias de alta renda com um Índice de Desenvolvimento Humano (IDH) muito alto e consideradas países desenvolvidos. Em 2017, os países membros da OCDE representavam coletivamente 62,2% do PIB nominal global (49,6 trilhões de dólares) e 42,8% do PIB global (54,2 trilhões de dólares internacionais) por paridade de poder de compra. A organização é um observador oficial das Nações Unidas. \n\n"
     "São países membros: Alemanha, Austrália, Áustria, Bélgica, Canadá, Chile, Colômbia, Coréia, Costa Rica, Dinamarca, Eslováquia, Eslovênia, Espanha, Estados Unidos, Estônia, Finlândia, França, Grécia, Hungria, Irlanda, Islândia, Israel, Itália, Japão, Letônia, Lituânia, Luxemburgo, México, Noruega, Nova Zelândia, Países Baixos, Polônia, Portugal, Reino Unido, República Checa, Suécia, Suíça e Turquia."
 
-    st.markdown("#### OPEP (Organização dos Países Exportadores de Petróleo):\n\n")
+    st.markdown(
+        "#### OPEP (Organização dos Países Exportadores de Petróleo):\n\n")
     "OPEP é o acrônimo de Organização dos Países Exportadores de Petróleo, uma organização internacional criada em 1960 com o objetivo de restringir a oferta no mercado internacional e pensar de forma conjunta a política de venda dos países-membros.\n\n"
     "Atualmente a OPEP conta com 14 países: Arábia Saudita, Emirados Árabes, Irã, Iraque, Kuwait, Catar, Angola, Argélia, Gabão, Guiné Equatorial, Líbia, Nigéria, Venezuela, Equador, e Indonésia. A OPEP é muito poderosa e sua atuação está inteiramente relacionada às crises que se seguiram"
 
@@ -494,6 +508,209 @@ elif st.session_state.selected_option == 'glossary':
 
 elif st.session_state.selected_option == 'predict':
     st.title("Predição do Petróleo Brent")
+
+    st.markdown(
+        "Com base em todos os dados que foram analisados até agora será feita a predição dos próximos valores do petróleo brent.")
+
+    fob_data = get_fob_data()
+    df = process_fob(fob_data)
+
+    renewable_data = get_renewable_energy_data()
+    df2 = pd.DataFrame(renewable_data['response']['data'])
+    df2 = df2[["period", "productName", "value"]]
+    df2['value'] = pd.to_numeric(df2['value'], errors='coerce')
+    df2['value'] = round(df2['value'], 3)
+
+    stock_data = get_petroleum_stock()
+    df3 = pd.DataFrame(stock_data['response']['data'])
+    df3 = df3[["period", "productName", "value"]]
+    df3['value'] = pd.to_numeric(df3['value'], errors='coerce')
+
+    consumption_data = get_consumption()
+    df4 = pd.DataFrame(consumption_data['response']['data'])
+    df4 = df4[["period", "productName", "value"]]
+    df4['value'] = pd.to_numeric(df4['value'], errors='coerce')
+
+    df_renewables = df2[df2['productName'] == 'Renewables']
+    df_electricity = df2[df2['productName'] == 'Electricity']
+
+    # Juntando os dados com base no 'period'
+    merged_df = pd.merge(df_renewables, df_electricity,
+                         on='period', suffixes=('_renew', '_elec'))
+
+    # Calculando a porcentagem de "Renewables" em relação a "Electricity" para cada período
+    merged_df['percentage'] = (
+        merged_df['value_renew'] / merged_df['value_elec']) * 100
+
+    # Agora, você pode adicionar esta porcentagem ao seu DataFrame original para uso no gráfico
+    # Por simplicidade, vou adicionar apenas a 'percentage' de volta ao df2, mas você pode ajustar conforme necessário
+    df2 = pd.merge(
+        df2, merged_df[['period', 'percentage']], on='period', how='left')
+
+    df2_filtrado = df2[df2['productName'] == 'Renewables']
+    df2_filtrado['Year'] = df2_filtrado['period'].apply(
+        lambda x: int(str(x)[:4]))
+
+    merged_df = pd.merge(
+        df, df2_filtrado[["percentage", "Year"]], on='Year', how='left')
+
+    last_percentage = df2_filtrado['percentage'].iloc[0]
+    merged_df['percentage'].fillna(last_percentage, inplace=True)
+
+    merged_df2 = pd.merge(merged_df, df3[[
+                          "value", "period"]], left_on='MonthYear', right_on='period', how='left')
+
+    last_stock = df3['value'].iloc[0]
+    merged_df2['value'].fillna(last_stock, inplace=True)
+
+    merged_df2.rename(
+        columns={'value': 'stock', 'percentage': 'renewable_percentage'}, inplace=True)
+    merged_df2.drop(columns=['period'], inplace=True)
+
+    merged_df3 = pd.merge(merged_df2, df4[[
+                          "value", "period"]], left_on='MonthYear', right_on='period', how='left')
+
+    merged_df3.rename(columns={'value': 'consumption'}, inplace=True)
+    merged_df3.drop(columns=['period'], inplace=True)
+
+    last_consumption = df3['value'].iloc[0]
+    merged_df3['consumption'].fillna(last_consumption, inplace=True)
+
+    # Converter a coluna 'Date' e 'MonthYear' para formatos numéricos
+    merged_df3['Date'] = pd.to_datetime(
+        merged_df3['Date']).map(pd.Timestamp.toordinal)
+    merged_df3['Year'] = pd.to_datetime(merged_df3['MonthYear']).dt.year
+    merged_df3['Month'] = pd.to_datetime(merged_df3['MonthYear']).dt.month
+    merged_df3.drop('MonthYear', axis=1, inplace=True)
+
+    import random
+
+    # Loop que executa 100 vezes
+    for _ in range(100):
+        last_prediction = model.predict(
+            merged_df3.iloc[-1:].drop(['Value'], axis=1))
+
+        # Defina o intervalo do multiplicador
+        min_multiplier = -0.02
+        max_multiplier = 0.02
+
+        # Gere um multiplicador aleatório dentro do intervalo
+        multiplier = random.uniform(min_multiplier, max_multiplier)
+
+        # Calcular a média móvel dos últimos 7 e 30 dias e aplicar o multiplicador
+        sma_7 = merged_df3['Value'].iloc[-7:].mean()
+        sma_30 = merged_df3['Value'].iloc[-30:].mean()
+
+        # Calcular o desvio padrão dos últimos 7 e 30 dias e aplicar o multiplicador
+        std_7 = merged_df3['Value'].iloc[-7:].std()
+        std_30 = merged_df3['Value'].iloc[-30:].std()
+
+        # Calcular o valor mínimo e máximo dos últimos 7 dias e aplicar o multiplicador
+        min_7 = merged_df3['Value'].iloc[-7:].min()
+        max_7 = merged_df3['Value'].iloc[-7:].max()
+
+        # Obtenha os valores originais dos campos
+        renewable_percentage = merged_df3.iloc[-1]["renewable_percentage"]
+        stock = merged_df3.iloc[-1]["stock"]
+        consumption = merged_df3.iloc[-1]["consumption"]
+
+        # Aplique o multiplicador aos valores originais
+        renewable_percentage *= (1 + 0.001)
+        stock *= (1 + 0.002)
+        consumption *= (1 + 0.005)
+
+        base_linha = {
+            'Date': merged_df3.iloc[-1]["Date"] + 1,
+            'Value': last_prediction[0] * (1 + multiplier),
+            'Year': merged_df3.iloc[-1]["Year"],
+            'SMA_7': sma_7,
+            'SMA_30': sma_30,
+            'STD_7': std_7,
+            'STD_30': std_30,
+            'MIN_7': min_7,
+            'MAX_7': max_7,
+            'renewable_percentage': renewable_percentage,
+            'stock': stock,
+            'consumption': consumption,
+            'Month':  merged_df3.iloc[-1]["Month"],
+        }
+
+        nova_linha = pd.DataFrame([base_linha])
+        merged_df3 = pd.concat([merged_df3, nova_linha], ignore_index=True)
+
+    # Certifique-se de que o DataFrame tem pelo menos 200 linhas
+    if len(merged_df3) >= 200:
+        merged_df3 = merged_df3.iloc[-200:]
+
+    X_merged_df3 = merged_df3.drop(['Value'], axis=1)
+
+    # Fazer previsões com o modelo treinado
+    y_pred_merged_df3 = model.predict(X_merged_df3)
+
+    merged_df3['Value'] = merged_df3['Value'].iloc[:-99]
+
+    X_merged_df3['Predicted'] = y_pred_merged_df3
+
+    from datetime import datetime
+
+    # Função para converter número ordinal em data
+    def ordinal_to_date(ordinal):
+        try:
+            return datetime.fromordinal(int(ordinal))
+        except (ValueError, OverflowError):
+            return pd.NaT  # Retorna 'Not a Time' para valores inválidos
+
+    # Convertendo a coluna 'Date'
+    merged_df3['Date'] = merged_df3['Date'].apply(ordinal_to_date)
+    X_merged_df3['Date'] = X_merged_df3['Date'].apply(ordinal_to_date)
+
+    # Definir 'Date' como índice
+    merged_df3.set_index('Date', inplace=True)
+    X_merged_df3.set_index('Date', inplace=True)
+
+    # Criar um DataFrame para o gráfico usando o índice
+    df_graph = pd.DataFrame({
+        'Actual': merged_df3['Value'],
+        'Predicted': X_merged_df3['Predicted']
+    })
+
+    # Criar o gráfico
+    fig = go.Figure()
+
+    ultima_data = merged_df3[~merged_df3['Value'].isna()].index[-1]
+
+    # Adicionar uma linha separando a marca de 100 índices
+    # Nota: Esta parte pode precisar de ajustes, pois 'x0' e 'x1' devem ser datas, não números
+    fig.add_shape(
+        go.layout.Shape(
+            type="line",
+            x0=ultima_data,  # Exemplo: substitua por uma data real
+            x1=ultima_data,  # Exemplo: substitua por uma data real
+            y0=df_graph['Actual'].min() - 6,
+            y1=df_graph['Actual'].max() + 6,
+            line=dict(color="gray", width=2, dash="dash")
+        )
+    )
+
+    # Adicione o traço para os Valores Reais com legenda "Actual"
+    fig.add_trace(go.Scatter(
+        x=df_graph.index, y=df_graph['Actual'], mode='lines', name='Real'))
+
+    # Adicionar um traço para os Valores Previstos com legenda
+    fig.add_trace(go.Scatter(
+        x=df_graph.index, y=df_graph['Predicted'], mode='lines', name='Previsto', line=dict(color='orange')))
+
+    fig.update_layout(title='Comparação entre Valores Reais e Valores Previstos (Próximos 100 dias)',
+                      xaxis_title='Data',
+                      yaxis_title='Preço por barril (US$)',
+                      legend_title='Legenda',
+                      xaxis=dict(type='date'))  # Configurar o eixo x para mostrar datas
+
+    # Mostrar o gráfico
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.write(X_merged_df3[["Predicted", "MIN_7",
+             "MAX_7", "SMA_7", "SMA_30"]].tail(100))
 
 elif st.session_state.selected_option == 'decision':
     st.title("Tomada de Decisão")
@@ -508,8 +725,8 @@ elif st.session_state.selected_option == 'more':
     st.title("Sobre nós")
 
     st.markdown(
-        
+
         "Essa atividade foi realizada pelos integrantes Alexandre Augusto de Oliveira Queiroz, Bruna Borges de Moura Scarpe e Hadassa Caroline Juricic, que fazem parte do curso de pós graduação em Análise de dados da FIAP.\n"
         "Nos foi proposto nesse desaio do Tech Challenge 4, realizar um trabalho analisando os dados de preço do petróleo brent, onde fizemos diversas análises, criamos um modelo de machine learning para prever o preço do petróleo e defininos insights que nos gerou bons resulatos para tomada de decisão. ")
-        
+
     st.image("assets/obg.png")
