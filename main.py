@@ -60,6 +60,21 @@ def process_fob(data):
     return df
 
 
+def get_renewable_energy_data():
+    url = "https://api.eia.gov/v2/international/data/"
+    headers = {
+        "x-params": '{"frequency":"annual","data":["value"],"facets":{"activityId":["1","12"],"productId":["2","29"],"countryRegionId":["WORL"],"unit":["BKWH"]},"start":"2000","end":null,"sort":[{"column":"period","direction":"desc"}],"offset":0,"length":5000}'
+    }
+    params = {
+        "api_key": "3zjKYxV86AqtJWSRoAECir1wQFscVu6lxXnRVKG8"
+    }
+    response = requests.get(url, headers=headers, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+
 # Options Menu
 st.sidebar.image("assets/logo.jpg")
 st.sidebar.markdown("<hr>", unsafe_allow_html=True)
@@ -279,4 +294,80 @@ elif st.session_state.selected_option == 'brent':
     st.markdown("<hr>", unsafe_allow_html=True)
 
     st.markdown(
-        "###### Para realização desta análise do preço do petróleo brent usamos as seguintes fontes: https://www.eia.gov")
+        "###### Para realização desta análise do preço do petróleo brent usamos as seguintes fontes:\n"
+        "https://www.eia.gov, https://blog.stoodi.com.br/blog/historia/crise-de-2008, "
+        "https://economiaenegocios.com/como-a-crise-financeira-de-2008-afetou-o-setor-de-petroleo-e-gas, "
+        "https://exame.com/mundo/o-que-esta-por-tras-da-queda-de-braco-entre-arabia-saudita-e-russia, "
+        "https://einvestidor.estadao.com.br/investimentos/preco-petroleo-2020, "
+        "https://blog.stoodi.com.br/blog/historia/crise-do-petroleo-o-que-foi, "
+        "https://epoca.oglobo.globo.com/tempo/noticia/2015/01/entenda-os-motivos-para-bqueda-do-preco-do-petroleob.html, "
+        "https://g1.globo.com/economia/noticia/2015/01/entenda-queda-do-preco-do-petroleo-e-seus-efeitos.html"
+    )
+
+elif st.session_state.selected_option == 'renewable':
+    st.title("Analisando o crescimento da energia renovável")
+
+    st.markdown(
+        "Um ponto interessante que podemos analisar é o crescimento das fontes de energia renovável e seu impacto no consumo/preço do petróleo.")
+
+    renewable_data = get_renewable_energy_data()
+    df2 = pd.DataFrame(renewable_data['response']['data'])
+    df2 = df2[["period", "productName", "value"]]
+    df2['value'] = pd.to_numeric(df2['value'], errors='coerce')
+
+    # Supondo que df2 seja o seu DataFrame e que ele contenha as colunas 'period', 'value' e 'productName'
+    # Separando os dados para "Renewables" e "Electricity"
+    df_renewables = df2[df2['productName'] == 'Renewables']
+    df_electricity = df2[df2['productName'] == 'Electricity']
+
+    # Juntando os dados com base no 'period'
+    merged_df = pd.merge(df_renewables, df_electricity,
+                         on='period', suffixes=('_renew', '_elec'))
+
+    # Calculando a porcentagem de "Renewables" em relação a "Electricity" para cada período
+    merged_df['renewable_percentage'] = (
+        merged_df['value_renew'] / merged_df['value_elec']) * 100
+
+    # Agora, você pode adicionar esta porcentagem ao seu DataFrame original para uso no gráfico
+    # Por simplicidade, vou adicionar apenas a 'percentage' de volta ao df2, mas você pode ajustar conforme necessário
+    df2 = pd.merge(
+        df2, merged_df[['period', 'renewable_percentage']], on='period', how='left')
+
+    fig = px.line(df2, x='period', y='value', color='productName',
+                  title='Consumo de energia ao longo do tempo por Produto (BKWH)',
+                  hover_data={'renewable_percentage': ':.2f'})
+
+    # Personalizando o layout do gráfico
+    fig.update_layout(xaxis_title='Data', yaxis_title='Valor',
+                      legend_title='Produto')
+
+    # Exibindo o gráfico
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("Antes de iniciar a avaliação do impacto da energia renovável ao preço do petróleo, vamos entender o que é energia renovável.\n"
+                "Quando falamos de energia, falamos da energia elétrica, ou da eletricidade, utilizada no nosso quotidiano, e quando a qualificamos como renovável, dizemos que esta fonte de energia é renovada rapidamente pela natureza.\n"
+                "Ou seja, uma fonte de energia renovável é aquela reposta tão ou mais rapidamente do que a podemos consumir. Dessa forma, não estamos a extrair da natureza mais do que ela nos possa dar. Pelo contrário: é uma lógica de consumo sustentável. E atenção: não apenas extraímos menos recursos, como extraímos recursos melhores, que não agridem o planeta.\n\n"
+                "##### Os 7 tipos de energia renovável conhecidos até ao momento:\n"
+                "* Energia Solar: Energia renovável obtida através da transformação da energia luminosa do sol em elétrica. \n"
+                "* Energia Eólica: Tipo de energia renovável obtida através da transformação da energia cinética dos ventos em elétrica.\n"
+                "* Energia Hidráulica: Modalidade de energia renovável obtida através da transformação da energia cinética dos cursos de água em elétrica.\n"
+                "* Energia Geotérmica: Energia renovável obtida através da transformação da energia térmica das águas quentes e vapores do interior da Terra em elétrica.\n"
+                "* Energia Maremotriz: Tipo de energia renovável obtida através da transformação da energia cinética das ondas e marés em elétrica.\n"
+                "* Energia do Hidrogénio: Energia obtida a partir da combinação entre o hidrogénio e o oxigénio, que liberta energia térmica, posteriormente convertida em eletricidade.\n"
+                "* Biomassa: Energia obtida durante a transformação de derivados de organismos vivos para a produção de energia calorífica, que é de seguida convertida em elétrica.\n"
+                "\n\n"
+                "##### E como a energia renovável pode afetar o preço do petróleo?\n\n"
+                "A consequência imediata da redução no preço do barril do petróleo é o crescimento da demanda por combustíveis fósseis e fontes de energia proveniente do petróleo, porém, existem outros efeitos desastrosos a longo prazo, tais como os impactos nos investimentos em geração de energia renováveis, pois a energia é uma commodity, e os consumidores não querem pagar mais caro pela energia, estes desejam energia sustentável com baixa emissão de gases de efeito estufa (GEEs), mas com preço baixos.\n\n"
+                "É importante salientar que o preço do petróleo é balizador do preço da energia, ou seja, quanto menor o preço do petróleo menor o preço da energia, diminuindo as taxas de retorno dos projetos em energia, incluindo os projetos de energia renováveis.\n\n"
+                "A deterioração do preço do petróleo deve continuar, pois recentemente as sanções comerciais ao Irã (7º maior produtor do mundo) se encerram, criando mais excedente de petróleo.\n\n"
+                "Esse cenário vem impactando às ações de empresas de energia listadas na FTSE e NYSE e levantando dúvidas sobre a capacidade de endividamento e a viabilidade de novos projetos de energia, principalmente, a energias renováveis.\n\n"
+                "E como está o consumo de energia do petróleo x consumo de energia renovável atualmente?\n\n"
+                "O Relatório de Estado Global de Energias Renováveis ​​2022 da REN21 (GSR 2022) declara que a transição global para energia limpa não está a acontecer, tornando improvável que o mundo seja capaz de cumprir metas climáticas críticas nesta década.\n\n"
+                "“Ainda que muitos outros governos se comprometam com zero emissões de gases de efeito estufa em 2021, a realidade é que, em resposta à crise energética, a maioria dos países voltou a utilizar novas fontes de combustíveis fósseis e a queimar ainda mais carvão, petróleo e gás natural”, declarou Rana Adib, Directora Executiva da REN21.\n\n"
+                "O GSR faz anualmente um balanço da implantação de energia renovável em todo o mundo. O relatório de 2022 é a 17ª edição consecutiva e comprova o que os especialistas têm alertado: a participação geral das energias renováveis ​​no consumo final de energia do mundo estagnou – subindo apenas de 8,7% em 2009 para 11,7% em 2019 – e o crescimento global a mudança do sistema energético para as energias renováveis ​​não está a acontecer.\n\n"
+                "No sector de electricidade, foram atingidos valores recorde em capacidade de energia renovável (314,5 gigawatts, 17% acima de 2020) e geração (7.793 terawatts-hora) não conseguiram corresponder ao aumento geral no consumo de electricidade de 6%. No aquecimento e arrefecimento, a quota de energias renováveis ​​no consumo final de energia aumentou de 8,9% em 2009 para 11,2% em 2019. No sector dos transportes, onde a quota de energias renováveis ​​passou de 2,4% em 2009 para 3,7% em 2019, a falta de progressos é particularmente preocupante, já que o sector responde por quase um terço do consumo global de energia.\n\n"
+                "\n\n"
+                "##### Qual a previsão sobre o uso das Energias Renovaveis?\n\n"
+                "A geração de energia por meio da luz solar cresceu 12% no mundo e, segundo a Agência Internacional de Energia (IEA), esse progresso não deve parar. Muito pelo contrário, visto que diversos países pretendem investir em fontes renováveis com o intuito de reduzir substancialmente a emissão de carbono durante a próxima década.\n\n"
+                "Por conta disso, a tendência é que o uso primário de energias renováveis cresça em torno de 60% nos próximos 30 anos. Segundo a multinacional British Petroleum, esse aumento será uma resposta inevitável à queda das fontes que dependem de combustíveis fósseis.\n\n"
+                "Não é à toa que a empresa investiu mais de um bilhão de dólares em usinas de energia eólica dos Estados Unidos. Uma decisão estratégica que não ignora a força ainda maior que a energia renovável terá no futuro.")
