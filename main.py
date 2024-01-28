@@ -397,6 +397,13 @@ elif st.session_state.selected_option == 'renewable':
                 "##### Qual a previsão sobre o uso das Energias Renovaveis?\n\n"
                 "A geração de energia por meio da luz solar cresceu 12% no mundo e, segundo a Agência Internacional de Energia (IEA), esse progresso não deve parar. Muito pelo contrário, visto que diversos países pretendem investir em fontes renováveis com o intuito de reduzir substancialmente a emissão de carbono durante a próxima década. Por conta disso, a tendência é que o uso primário de energias renováveis cresça em torno de 60% nos próximos 30 anos. Segundo a multinacional British Petroleum, esse aumento será uma resposta inevitável à queda das fontes que dependem de combustíveis fósseis. Não é à toa que a empresa investiu mais de um bilhão de dólares em usinas de energia eólica dos Estados Unidos. Uma decisão estratégica que não ignora a força ainda maior que a energia renovável terá no futuro."
                 )
+    st.image("assets/energia.jpg")
+
+    st.markdown(
+        "###### Para realização desta análise usamos as seguintes fontes:\n"
+        "https://www.epe.gov.br/pt/abcdenergia/matriz-energetica-e-eletrica,"
+        "https://goldenergy.pt/blog/energia-verde/tipos-de-energia-renovavel/"
+    )
 
 elif st.session_state.selected_option == 'stock':
     st.title("Analisando o estoque mundial de petróleo")
@@ -457,6 +464,7 @@ elif st.session_state.selected_option == 'consumption':
     # Exibindo o gráfico
     st.plotly_chart(fig, use_container_width=True)
 
+
     st.markdown("Abaixo incluímos um gráfico que apresenta a progressão de Oferta e Demanda Mundial do Petróleo ao longo de 7 trimestres. \n")
     st.image("assets/oferta_demanda.jpg")
 
@@ -489,3 +497,19 @@ elif st.session_state.selected_option == 'predict':
 
 elif st.session_state.selected_option == 'decision':
     st.title("Tomada de Decisão")
+
+    st.markdown("#### Como o consumo de petróleo afeta o valor do petróleo? - Demanda e Oferta\n\n"
+                "Ao final de 2019, as condições da indústria mundial do petróleo indicavam a continuidade, no curto prazo, da dinâmica até então vigente – um equilíbrio tênue entre oferta e demanda que manteve os preços spot do petróleo Brent em relativa estabilidade, oscilando entre US$ 60/b e US$ 70/b. Contudo, os primeiros meses de 2020 foram marcados por eventos relevantes que acarretaram variações significativas nos preços internacionais do petróleo.\n\n"
+                "Medidas de distanciamento social e restrições à mobilidade, visando à redução da circulação de pessoas, têm sido amplamente adotadas em grande parte do mundo como prevenção à pandemia de Covid-19. Embora variem em espectro, tais ações têm impactado a mobilidade, com consequências sobre consumo, serviços e atividade industrial, reduzindo o nível da atividade econômica mundial. Assim, a pandemia tem infligido efeitos consideráveis sobre a demanda mundial de petróleo. As atividades dos transportes rodoviários de passageiros e aéreo foram as mais afetadas pela ampla adoção de medidas de restrição à mobilidade no mundo, levando a reduções históricas no consumo global de gasolina e de querosene de aviação (QAV) (IEA, 2020a).\n\n"
+                "Ao mesmo tempo em que a demanda foi severamente impactada, a indústria do petróleo observou alterações na dinâmica da oferta mundial. O acordo para limitar a produção entre países-membros da Organização dos Países Exportadores de Petróleo (OPEP) e outros grandes produtores, em especial a Rússia, não foi renovado no início de março de 2020. Em abril, a Arábia Saudita anunciou o aumento da sua produção para mais de 12 milhões b/d, retomando a política de disputa de mercado. Em seguida, a OPEP+ (grupo formado pelos membros da OPEP, Rússia e outros países produtores) fechou acordo para a redução da sua oferta de petróleo, inicialmente com cortes de 9,7 milhões b/d a partir de maio. Simultaneamente, retrações adicionais de produção foram observadas em outros países, com destaque para Estados Unidos e Canadá (IEA, 2020a).\n\n"
+                "Com os impactos da pandemia mundial de Covid-19 e as disputas por mercado entre os grandes produtores da OPEP+, os preços do petróleo Brent recuaram para menos de US 20/b em abril. A partir de maio, com o apoio de significativos cortes de produção nos países da OPEP+, os preços do Brent se estabilizaram em um patamar de US 40/b (EIA, 2020a).")
+
+elif st.session_state.selected_option == 'more':
+    st.title("Sobre nós")
+
+    st.markdown(
+        
+        "Essa atividade foi realizada pelos integrantes Alexandre Augusto de Oliveira Queiroz, Bruna Borges de Moura Scarpe e Hadassa Caroline Juricic, que fazem parte do curso de pós graduação em Análise de dados da FIAP.\n"
+        "Nos foi proposto nesse desaio do Tech Challenge 4, realizar um trabalho analisando os dados de preço do petróleo brent, onde fizemos diversas análises, criamos um modelo de machine learning para prever o preço do petróleo e defininos insights que nos gerou bons resulatos para tomada de decisão. ")
+        
+    st.image("assets/obg.png")
