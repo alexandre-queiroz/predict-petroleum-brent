@@ -129,6 +129,7 @@ st.sidebar.button('Consumo Petróleo', on_click=set_option,
 st.sidebar.button('Predição Petróleo Brent',
                   on_click=set_option, args=('predict',))
 st.sidebar.button('Tomada de decisão', on_click=set_option, args=('decision',))
+st.sidebar.button('Glossário', on_click=set_option, args=('glossary',))
 st.sidebar.button('Sobre nós', on_click=set_option, args=('more',))
 
 
@@ -418,7 +419,7 @@ elif st.session_state.selected_option == 'stock':
 
     # Criando um gráfico de linhas com Plotly
     fig = px.line(df3, x='period', y='value',
-                  title='Stock de petroleo ao Longo do Tempo')
+                  title='Estoque de petroleo ao Longo do Tempo')
 
     # Personalizando o layout do gráfico
     fig.update_layout(xaxis_title='Data', yaxis_title='Valor')
@@ -426,16 +427,26 @@ elif st.session_state.selected_option == 'stock':
     # Exibindo o gráfico
     st.plotly_chart(fig, use_container_width=True)
 
-    st.markdown("Excesso de Oferta: Quando os estoques de petróleo estão constantemente aumentando, isso pode indicar um excesso de oferta no mercado. Um excesso de oferta significa que há mais petróleo disponível do que a demanda do mercado pode absorver, levando geralmente a uma queda nos preços.\n\n"
-                "Pressão nos Preços à Vista: O aumento do estoque de petróleo pode criar pressão descendente nos preços do petróleo à vista (spot prices). Os preços à vista refletem as condições de oferta e demanda imediatas e são influenciados pela disponibilidade de petróleo no curto prazo.\n\n"
-                "Redução da Capacidade de Armazenamento: Se os estoques atingirem níveis muito altos e a capacidade de armazenamento estiver próxima do limite, os produtores podem ser forçados a vender o petróleo a preços mais baixos para evitar custos adicionais associados ao armazenamento.\n\n"
-                "Decisões da OPEP e Outros Produtores: A Organização dos Países Exportadores de Petróleo (OPEP) e outros grandes produtores de petróleo frequentemente ajustam sua produção em resposta às condições do mercado. Se os estoques estiverem altos e os preços estiverem sob pressão, a OPEP e outros produtores podem considerar a redução da produção para equilibrar o mercado e sustentar os preços.\n\n"
-                "Expectativas do Mercado: Os participantes do mercado, como investidores e traders, frequentemente reagem às informações sobre os estoques de petróleo. Se os estoques estiverem aumentando constantemente, isso pode influenciar as expectativas do mercado sobre os futuros movimentos dos preços, levando a uma venda antecipada e à queda dos preços.\n\n"
+    st.markdown("* Excesso de Oferta: Quando os estoques de petróleo estão constantemente aumentando, isso pode indicar um excesso de oferta no mercado. Um excesso de oferta significa que há mais petróleo disponível do que a demanda do mercado pode absorver, levando geralmente a uma queda nos preços.\n\n"
+                "* Pressão nos Preços à Vista: O aumento do estoque de petróleo pode criar pressão descendente nos preços do petróleo à vista (spot prices). Os preços à vista refletem as condições de oferta e demanda imediatas e são influenciados pela disponibilidade de petróleo no curto prazo.\n\n"
+                "* Redução da Capacidade de Armazenamento: Se os estoques atingirem níveis muito altos e a capacidade de armazenamento estiver próxima do limite, os produtores podem ser forçados a vender o petróleo a preços mais baixos para evitar custos adicionais associados ao armazenamento.\n\n"
+                "* Decisões da OPEP e Outros Produtores: A Organização dos Países Exportadores de Petróleo (OPEP) e outros grandes produtores de petróleo frequentemente ajustam sua produção em resposta às condições do mercado. Se os estoques estiverem altos e os preços estiverem sob pressão, a OPEP e outros produtores podem considerar a redução da produção para equilibrar o mercado e sustentar os preços.\n\n"
+                "* Expectativas do Mercado: Os participantes do mercado, como investidores e traders, frequentemente reagem às informações sobre os estoques de petróleo. Se os estoques estiverem aumentando constantemente, isso pode influenciar as expectativas do mercado sobre os futuros movimentos dos preços, levando a uma venda antecipada e à queda dos preços.\n\n"
                 "É importante observar que outros fatores também influenciam os preços do petróleo, como eventos geopolíticos, mudanças na demanda global, condições econômicas e desenvolvimentos tecnológicos. Além disso, os mercados de petróleo são frequentemente voláteis e podem ser afetados por eventos imprevistos. Assim, a relação entre os estoques de petróleo e os preços é complexa e dinâmica.")
 
-    st.image("assets/oferta_demanda.jpg")
+    st.markdown("Estoques globais de petróleo e cotação do Brent:")
+    st.image("assets/estoque.png")
+
+    st.subheader("Fontes:")
+    st.markdown("* OPEP - https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/PublicacoesArquivos/publicacao-542/NT-EPE-DPG-SDB-2020-04_Pre%C3%A7os%20Petr%C3%B3leo%20e%20Derivados_2020_2030.pdf.\n * IBP - https://www.ibp.org.br/personalizado/uploads/2021/06/relacao-entre-estoques-e-preco-do-petroleo.pdf#:~:text=Desse%20modo%2C%20uma%20eleva%C3%A7%C3%A3o%20dos%20estoques%20pode%20indicar,o%20pre%C3%A7o%20spot%20cair%C3%A1%20para%20reequilibrar%20o%20mercado.")
 
 elif st.session_state.selected_option == 'consumption':
+
+    st.title("Como o consumo de petróleo afeta o valor do petróleo? - Demanda e Oferta\n\n")
+    st.markdown("Ao final de 2019, as condições da indústria mundial do petróleo indicavam a continuidade, no curto prazo, da dinâmica até então vigente – um equilíbrio tênue entre oferta e demanda que manteve os preços spot do petróleo Brent em relativa estabilidade, oscilando entre US$ 60/b e US$ 70/b. Contudo, os primeiros meses de 2020 foram marcados por eventos relevantes que acarretaram variações significativas nos preços internacionais do petróleo.\n\n"
+                "Medidas de distanciamento social e restrições à mobilidade, visando à redução da circulação de pessoas, têm sido amplamente adotadas em grande parte do mundo como prevenção à pandemia de Covid-19. Embora variem em espectro, tais ações têm impactado a mobilidade, com consequências sobre consumo, serviços e atividade industrial, reduzindo o nível da atividade econômica mundial. Assim, a pandemia tem infligido efeitos consideráveis sobre a demanda mundial de petróleo. As atividades dos transportes rodoviários de passageiros e aéreo foram as mais afetadas pela ampla adoção de medidas de restrição à mobilidade no mundo, levando a reduções históricas no consumo global de gasolina e de querosene de aviação (QAV) (IEA, 2020a).\n\n"
+                "Ao mesmo tempo em que a demanda foi severamente impactada, a indústria do petróleo observou alterações na dinâmica da oferta mundial. O acordo para limitar a produção entre países-membros da Organização dos Países Exportadores de Petróleo (OPEP) e outros grandes produtores, em especial a Rússia, não foi renovado no início de março de 2020. Em abril, a Arábia Saudita anunciou o aumento da sua produção para mais de 12 milhões b/d, retomando a política de disputa de mercado. Em seguida, a OPEP+ (grupo formado pelos membros da OPEP, Rússia e outros países produtores) fechou acordo para a redução da sua oferta de petróleo, inicialmente com cortes de 9,7 milhões b/d a partir de maio. Simultaneamente, retrações adicionais de produção foram observadas em outros países, com destaque para Estados Unidos e Canadá (IEA, 2020a).\n")
+    
     consumption_data = get_consumption()
     df4 = pd.DataFrame(consumption_data['response']['data'])
     df4 = df4[["period", "productName", "value"]]
@@ -452,6 +463,40 @@ elif st.session_state.selected_option == 'consumption':
 
     # Exibindo o gráfico
     st.plotly_chart(fig, use_container_width=True)
+
+
+    st.markdown("Abaixo incluímos um gráfico que apresenta a progressão de Oferta e Demanda Mundial do Petróleo ao longo de 7 trimestres. \n")
+    st.image("assets/oferta_demanda.jpg")
+
+    st.subheader("Fontes:")
+    "* EPE - https://www.epe.gov.br/sites-pt/publicacoes-dados-abertos/publicacoes/PublicacoesArquivos/publicacao-542/NT-EPE-DPG-SDB-2020-04_Pre%C3%A7os%20Petr%C3%B3leo%20e%20Derivados_2020_2030.pdf."
+
+elif st.session_state.selected_option == 'glossary':
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.image("assets/glossario.jpg")
+ 
+    st.title("Glossário")
+
+    st.markdown("#### OCDE (Organização para a Cooperação e Desenvolvimento Econômico):\n\n")
+    "Organização para a Cooperação e Desenvolvimento Econômico é uma organização econômica intergovernamental com 38 países membros, fundada em 1961 para estimular o progresso econômico e o comércio mundial.\n\n"
+    "É um fórum de países que se descrevem comprometidos com a democracia e a economia de mercado, oferecendo uma plataforma para comparar experiências políticas, buscar respostas para problemas comuns, identificar boas práticas e coordenar as políticas domésticas e internacionais de seus membros. A maioria dos membros da OCDE é formada por economias de alta renda com um Índice de Desenvolvimento Humano (IDH) muito alto e consideradas países desenvolvidos. Em 2017, os países membros da OCDE representavam coletivamente 62,2% do PIB nominal global (49,6 trilhões de dólares) e 42,8% do PIB global (54,2 trilhões de dólares internacionais) por paridade de poder de compra. A organização é um observador oficial das Nações Unidas. \n\n"
+    "São países membros: Alemanha, Austrália, Áustria, Bélgica, Canadá, Chile, Colômbia, Coréia, Costa Rica, Dinamarca, Eslováquia, Eslovênia, Espanha, Estados Unidos, Estônia, Finlândia, França, Grécia, Hungria, Irlanda, Islândia, Israel, Itália, Japão, Letônia, Lituânia, Luxemburgo, México, Noruega, Nova Zelândia, Países Baixos, Polônia, Portugal, Reino Unido, República Checa, Suécia, Suíça e Turquia."
+
+    st.markdown("#### OPEP (Organização dos Países Exportadores de Petróleo):\n\n")
+    "OPEP é o acrônimo de Organização dos Países Exportadores de Petróleo, uma organização internacional criada em 1960 com o objetivo de restringir a oferta no mercado internacional e pensar de forma conjunta a política de venda dos países-membros.\n\n"
+    "Atualmente a OPEP conta com 14 países: Arábia Saudita, Emirados Árabes, Irã, Iraque, Kuwait, Catar, Angola, Argélia, Gabão, Guiné Equatorial, Líbia, Nigéria, Venezuela, Equador, e Indonésia. A OPEP é muito poderosa e sua atuação está inteiramente relacionada às crises que se seguiram"
+
+    st.markdown("####  PETRÓLEO BRENT: \n\n")
+    "O termo Petróleo Brent designa a origem de extração do petróleo. No caso do Brent, o nome se dá por conta de uma base da Shell chamada Brent. Atualmente, esse termo diz respeito a todo o petróleo que é extraído no Mar do Norte."
+
+    st.subheader("Fontes:")
+    "* OCDE - https://pt.wikipedia.org/wiki/Organiza%C3%A7%C3%A3o_para_a_Coopera%C3%A7%C3%A3o_e_Desenvolvimento_Econ%C3%B4mico.\n* OPEP - https://blog.stoodi.com.br/blog/historia/crise-do-petroleo-o-que-foi/.\n * BRENT - https://www.mobills.com.br/blog/investimentos/petroleo-brent-grafico/."
+
+elif st.session_state.selected_option == 'predict':
+    st.title("Predição do Petróleo Brent")
+
+elif st.session_state.selected_option == 'decision':
+    st.title("Tomada de Decisão")
 
     st.markdown("#### Como o consumo de petróleo afeta o valor do petróleo? - Demanda e Oferta\n\n"
                 "Ao final de 2019, as condições da indústria mundial do petróleo indicavam a continuidade, no curto prazo, da dinâmica até então vigente – um equilíbrio tênue entre oferta e demanda que manteve os preços spot do petróleo Brent em relativa estabilidade, oscilando entre US$ 60/b e US$ 70/b. Contudo, os primeiros meses de 2020 foram marcados por eventos relevantes que acarretaram variações significativas nos preços internacionais do petróleo.\n\n"
