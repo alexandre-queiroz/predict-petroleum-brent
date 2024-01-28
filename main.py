@@ -105,7 +105,7 @@ if st.session_state.selected_option == 'case':
     st.markdown("<hr>", unsafe_allow_html=True)
 
     st.markdown(
-        "###### Para realização inicial da análise usamos as seguintes fontes: https://www.eia.gov, https://guru.com.vc/glossario/brent")
+        "###### Para realização desta análise inicial usamos as seguintes fontes: https://www.eia.gov, https://guru.com.vc/glossario/brent")
 
 elif st.session_state.selected_option == 'brent':
     st.title("Analisando o preço do petróleo ao longo do tempo")
@@ -128,7 +128,8 @@ elif st.session_state.selected_option == 'brent':
     st.plotly_chart(fig, use_container_width=True)
 
     st.markdown(
-        "###### Após esta análise podemos ver 3 grandes mudanças de preço nos períodos próximos a 2008, 2014 e 2020.")
+        "##### Após esta análise podemos ver algumas grandes mudanças de preço nos períodos próximos a 2008, 2011, 2014, 2020 e 2022, vamos entender um pouco mais sobre os motivs dessas grandes variações de preço.")
+    st.markdown("<br>", unsafe_allow_html=True)
 
     # ------------------------------------- Análise de 2008 ----------------------------------------------------------
     df_2008 = df[df['Year'] == 2008]
@@ -171,9 +172,11 @@ elif st.session_state.selected_option == 'brent':
 
     st.markdown("A crise financeira global e a Grande Recessão que se seguiu tiveram um impacto negativo pronunciado no setor de petróleo e gás, uma vez que levou a uma queda acentuada nos preços do petróleo e gás e uma contração no crédito. A queda nos preços resultou em queda nas receitas das empresas de petróleo e gás. A crise financeira também levou a condições de crédito restritivas que resultaram em muitos exploradores e produtores pagando altas taxas de juros ao levantar capital, reduzindo assim os ganhos futuros.")
 
+    st.markdown("<br>", unsafe_allow_html=True)
+
     # ------------------------------------- Análise de 2014      ----------------------------------------------------------
     df_2014 = df[df['Year'] == 2014]
-    df_2014["Periodos de 2008"] = df_2014["Date"]
+    df_2014["Periodos de 2014"] = df_2014["Date"]
 
     max_value_2014 = df_2014['Value'].max()
     min_value_2014 = df_2014['Value'].min()
@@ -195,11 +198,11 @@ elif st.session_state.selected_option == 'brent':
     # Coluna 1: Tabela de descrição
     col2.markdown("<br>", unsafe_allow_html=True)  # Margem superior com HTML
     col2.markdown("<br>", unsafe_allow_html=True)  # Margem superior com HTML
-    col2.write(df_2008[["Periodos de 2008", "Value"]].describe())
+    col2.write(df_2014[["Periodos de 2014", "Value"]].describe())
 
     # Criando um gráfico de linhas com Plotly
-    fig = px.line(df_2008, x='Date', y='Value', line_shape='spline',
-                  title='Valores do petroleo brent em 2008')
+    fig = px.line(df_2014, x='Date', y='Value', line_shape='spline',
+                  title='Valores do petroleo brent em 2014')
 
     # Personalizando o layout do gráfico
     fig.update_layout(xaxis_title='Data',
@@ -208,9 +211,60 @@ elif st.session_state.selected_option == 'brent':
     # Exibindo o gráfico
     col1.plotly_chart(fig, use_container_width=True)
 
-    st.markdown("")
+    st.markdown("A queda do preço do petróleo em 2014 foi influenciada por vários fatores, incluindo o aumento da produção de petróleo, especialmente nas áreas de xisto dos EUA, e uma demanda menor do que a esperada na Europa e na Ásia. Em novembro do mesmo ano, essa queda se acentuou, diante do excesso de oferta e da recusa dos países da Organização dos Países Exportadores de Petróleo (Opep) em reduzir seu teto de produção, independentemente do preço no mercado internacional. A Opep culpa a grande produção de óleo de xisto pelas baixas cotações da commodity e, segundo alguns analistas, estaria disposta a aceitar um preço ainda mais baixo para tirar do mercado outros produtores ou inviabilizar a exploração de rivais como os produtores norte-americanos.")
 
-    st.markdown("")
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # ------------------------------------- Análise de 2020      ----------------------------------------------------------
+    df_2020 = df[df['Year'] == 2020]
+    df_2020["Periodos de 2020"] = df_2020["Date"]
+
+    max_value_2020 = df_2020['Value'].max()
+    min_value_2020 = df_2020['Value'].min()
+
+    if min_value_2020 != 0:
+        variacao_percentual = (
+            (max_value_2020 - min_value_2020) / min_value_2020) * 100
+        # Formatação para duas casas decimais
+        variacao_percentual_texto = f"{variacao_percentual:.2f}%"
+    else:
+        variacao_percentual_texto = "Indefinido"
+
+    # Exibindo a variação
+    st.markdown(
+        f"##### Período de 2020: Variação entre a máxima e mínima {variacao_percentual_texto}")
+
+    col1, col2 = st.columns([3, 6])
+
+    # Coluna 1: Tabela de descrição
+    col1.markdown("<br>", unsafe_allow_html=True)  # Margem superior com HTML
+    col1.markdown("<br>", unsafe_allow_html=True)  # Margem superior com HTML
+    col1.write(df_2020[["Periodos de 2020", "Value"]].describe())
+
+    # Criando um gráfico de linhas com Plotly
+    fig = px.line(df_2020, x='Date', y='Value', line_shape='spline',
+                  title='Valores do petroleo brent em 2020')
+
+    # Personalizando o layout do gráfico
+    fig.update_layout(xaxis_title='Data',
+                      yaxis_title='Valor (Preço por Barril)')
+
+    # Exibindo o gráfico
+    col2.plotly_chart(fig, use_container_width=True)
+
+    texto = """
+    A crise de 2020 entre a Arábia Saudita e a Rússia foi uma queda de braço no mercado do petróleo que causou a maior queda no preço do barril desde 1991, quando Estados Unidos e aliados bombardeavam o Iraque na Guerra do Golfo. A tensão entre os países fez bolsas globais derreterem. Por trás dessa crise, está um xadrez geopolítico complexo e que vai além do petróleo. 
+
+    O temor relacionado à provável diminuição da oferta por conta de conflitos na região fez os preços do barril de Brent (negociado na Opep, entre países europeus e asiáticos e pela Petrobras) saltarem 3,55% no dia 03 de janeiro, passando de US 66,25 para US 68,60.
+
+    A história começa com a tentativa saudita de fazer com que os países da Opep (Organização dos Países Exportadores de Petróleo), aliança da qual o reino é líder informal, cortassem a produção diária de barris de petróleo em 1,5 milhão de barris até o final do ano. O plano era diminuir a oferta para conter a queda nos preços, diante da expectativa de redução no consumo de petróleo mundo afora. Os russos não toparam, rompendo uma união que por anos controlou esse mercado. Para retaliar, os sauditas decidiram fazer o inverso: aumentaram a produção e baixaram drasticamente os preços. “Os russos produzem muito petróleo (cerca de 10 milhões de barris por dia) e ganham dinheiro com a escala da operação.
+
+    Coronavírus e tensão entre Arábia Saudita e Rússia:
+
+    Conforme a covid-19 avançava pelo mundo e obrigava nações a entrarem em isolamento social, o consumo de combustíveis diminuía. Com isso, a demanda por petróleo também enfrentou uma baixa drástica.
+    """
+
+    st.markdown(texto)
 
     # Criando um boxplot com Plotly
     fig = px.box(df, x='Year', y='Value', labels={'Year': 'Ano', 'Value': 'Valor'},
@@ -221,3 +275,8 @@ elif st.session_state.selected_option == 'brent':
 
     # Exibindo o gráfico
     st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("<hr>", unsafe_allow_html=True)
+
+    st.markdown(
+        "###### Para realização desta análise do preço do petróleo brent usamos as seguintes fontes: https://www.eia.gov")
