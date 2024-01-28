@@ -75,8 +75,38 @@ def get_renewable_energy_data():
         return None
 
 
+def get_petroleum_stock():
+    url = "https://api.eia.gov/v2/international/data/"
+    headers = {
+        "x-params": '{"frequency":"monthly","data":["value"],"facets":{"activityId":["5"],"countryRegionId":["OECD"]},"start":"2000-01","end":"2023-09","sort":[{"column":"period","direction":"desc"}],"offset":0,"length":5000}'
+    }
+    params = {
+        "api_key": "3zjKYxV86AqtJWSRoAECir1wQFscVu6lxXnRVKG8"
+    }
+    response = requests.get(url, headers=headers, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+
+def get_consumption():
+    url = "https://api.eia.gov/v2/international/data/"
+    headers = {
+        "x-params": '{"frequency":"monthly","data":["value"],"facets":{"activityId":["2"],"countryRegionId":["OECD"]},"start":"2000-01","end":"2023-09","sort":[{"column":"period","direction":"desc"}],"offset":0,"length":5000}'
+    }
+    params = {
+        "api_key": "3zjKYxV86AqtJWSRoAECir1wQFscVu6lxXnRVKG8"
+    }
+    response = requests.get(url, headers=headers, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
+
+
 # Options Menu
-st.sidebar.image("assets/logo.jpg")
+st.sidebar.image("assets/logo2.png")
 st.sidebar.markdown("<hr>", unsafe_allow_html=True)
 st.sidebar.title("Menu")
 
@@ -354,20 +384,70 @@ elif st.session_state.selected_option == 'renewable':
                 "* Energia Geotérmica: Energia renovável obtida através da transformação da energia térmica das águas quentes e vapores do interior da Terra em elétrica.\n"
                 "* Energia Maremotriz: Tipo de energia renovável obtida através da transformação da energia cinética das ondas e marés em elétrica.\n"
                 "* Energia do Hidrogénio: Energia obtida a partir da combinação entre o hidrogénio e o oxigénio, que liberta energia térmica, posteriormente convertida em eletricidade.\n"
-                "* Biomassa: Energia obtida durante a transformação de derivados de organismos vivos para a produção de energia calorífica, que é de seguida convertida em elétrica.\n"
-                "\n\n"
-                "##### E como a energia renovável pode afetar o preço do petróleo?\n\n"
-                "A consequência imediata da redução no preço do barril do petróleo é o crescimento da demanda por combustíveis fósseis e fontes de energia proveniente do petróleo, porém, existem outros efeitos desastrosos a longo prazo, tais como os impactos nos investimentos em geração de energia renováveis, pois a energia é uma commodity, e os consumidores não querem pagar mais caro pela energia, estes desejam energia sustentável com baixa emissão de gases de efeito estufa (GEEs), mas com preço baixos.\n\n"
-                "É importante salientar que o preço do petróleo é balizador do preço da energia, ou seja, quanto menor o preço do petróleo menor o preço da energia, diminuindo as taxas de retorno dos projetos em energia, incluindo os projetos de energia renováveis.\n\n"
-                "A deterioração do preço do petróleo deve continuar, pois recentemente as sanções comerciais ao Irã (7º maior produtor do mundo) se encerram, criando mais excedente de petróleo.\n\n"
-                "Esse cenário vem impactando às ações de empresas de energia listadas na FTSE e NYSE e levantando dúvidas sobre a capacidade de endividamento e a viabilidade de novos projetos de energia, principalmente, a energias renováveis.\n\n"
-                "E como está o consumo de energia do petróleo x consumo de energia renovável atualmente?\n\n"
-                "O Relatório de Estado Global de Energias Renováveis ​​2022 da REN21 (GSR 2022) declara que a transição global para energia limpa não está a acontecer, tornando improvável que o mundo seja capaz de cumprir metas climáticas críticas nesta década.\n\n"
-                "“Ainda que muitos outros governos se comprometam com zero emissões de gases de efeito estufa em 2021, a realidade é que, em resposta à crise energética, a maioria dos países voltou a utilizar novas fontes de combustíveis fósseis e a queimar ainda mais carvão, petróleo e gás natural”, declarou Rana Adib, Directora Executiva da REN21.\n\n"
-                "O GSR faz anualmente um balanço da implantação de energia renovável em todo o mundo. O relatório de 2022 é a 17ª edição consecutiva e comprova o que os especialistas têm alertado: a participação geral das energias renováveis ​​no consumo final de energia do mundo estagnou – subindo apenas de 8,7% em 2009 para 11,7% em 2019 – e o crescimento global a mudança do sistema energético para as energias renováveis ​​não está a acontecer.\n\n"
-                "No sector de electricidade, foram atingidos valores recorde em capacidade de energia renovável (314,5 gigawatts, 17% acima de 2020) e geração (7.793 terawatts-hora) não conseguiram corresponder ao aumento geral no consumo de electricidade de 6%. No aquecimento e arrefecimento, a quota de energias renováveis ​​no consumo final de energia aumentou de 8,9% em 2009 para 11,2% em 2019. No sector dos transportes, onde a quota de energias renováveis ​​passou de 2,4% em 2009 para 3,7% em 2019, a falta de progressos é particularmente preocupante, já que o sector responde por quase um terço do consumo global de energia.\n\n"
+                "* Biomassa: Energia obtida durante a transformação de derivados de organismos vivos para a produção de energia calorífica, que é de seguida convertida em elétrica.\n")
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.image("assets/tipos_energia.png")
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown("##### E como a energia renovável pode afetar o preço do petróleo?\n\n"
+                "A consequência imediata da redução no preço do barril do petróleo é o crescimento da demanda por combustíveis fósseis e fontes de energia proveniente do petróleo, porém, existem outros efeitos desastrosos a longo prazo, tais como os impactos nos investimentos em geração de energia renováveis, pois a energia é uma commodity, e os consumidores não querem pagar mais caro pela energia, estes desejam energia sustentável com baixa emissão de gases de efeito estufa (GEEs), mas com preço baixos. É importante salientar que o preço do petróleo é balizador do preço da energia, ou seja, quanto menor o preço do petróleo menor o preço da energia, diminuindo as taxas de retorno dos projetos em energia, incluindo os projetos de energia renováveis. A deterioração do preço do petróleo deve continuar, pois recentemente as sanções comerciais ao Irã (7º maior produtor do mundo) se encerram, criando mais excedente de petróleo. Esse cenário vem impactando às ações de empresas de energia listadas na FTSE e NYSE e levantando dúvidas sobre a capacidade de endividamento e a viabilidade de novos projetos de energia, principalmente, a energias renováveis. E como está o consumo de energia do petróleo x consumo de energia renovável atualmente? O Relatório de Estado Global de Energias Renováveis ​​2022 da REN21 (GSR 2022) declara que a transição global para energia limpa não está a acontecer, tornando improvável que o mundo seja capaz de cumprir metas climáticas críticas nesta década. “Ainda que muitos outros governos se comprometam com zero emissões de gases de efeito estufa em 2021, a realidade é que, em resposta à crise energética, a maioria dos países voltou a utilizar novas fontes de combustíveis fósseis e a queimar ainda mais carvão, petróleo e gás natural”, declarou Rana Adib, Directora Executiva da REN21. O GSR faz anualmente um balanço da implantação de energia renovável em todo o mundo. O relatório de 2022 é a 17ª edição consecutiva e comprova o que os especialistas têm alertado: a participação geral das energias renováveis ​​no consumo final de energia do mundo estagnou – subindo apenas de 8,7% em 2009 para 11,7% em 2019 – e o crescimento global a mudança do sistema energético para as energias renováveis ​​não está a acontecer. No sector de electricidade, foram atingidos valores recorde em capacidade de energia renovável (314,5 gigawatts, 17% acima de 2020) e geração (7.793 terawatts-hora) não conseguiram corresponder ao aumento geral no consumo de electricidade de 6%. No aquecimento e arrefecimento, a quota de energias renováveis ​​no consumo final de energia aumentou de 8,9% em 2009 para 11,2% em 2019. No sector dos transportes, onde a quota de energias renováveis ​​passou de 2,4% em 2009 para 3,7% em 2019, a falta de progressos é particularmente preocupante, já que o sector responde por quase um terço do consumo global de energia."
                 "\n\n"
                 "##### Qual a previsão sobre o uso das Energias Renovaveis?\n\n"
-                "A geração de energia por meio da luz solar cresceu 12% no mundo e, segundo a Agência Internacional de Energia (IEA), esse progresso não deve parar. Muito pelo contrário, visto que diversos países pretendem investir em fontes renováveis com o intuito de reduzir substancialmente a emissão de carbono durante a próxima década.\n\n"
-                "Por conta disso, a tendência é que o uso primário de energias renováveis cresça em torno de 60% nos próximos 30 anos. Segundo a multinacional British Petroleum, esse aumento será uma resposta inevitável à queda das fontes que dependem de combustíveis fósseis.\n\n"
-                "Não é à toa que a empresa investiu mais de um bilhão de dólares em usinas de energia eólica dos Estados Unidos. Uma decisão estratégica que não ignora a força ainda maior que a energia renovável terá no futuro.")
+                "A geração de energia por meio da luz solar cresceu 12% no mundo e, segundo a Agência Internacional de Energia (IEA), esse progresso não deve parar. Muito pelo contrário, visto que diversos países pretendem investir em fontes renováveis com o intuito de reduzir substancialmente a emissão de carbono durante a próxima década. Por conta disso, a tendência é que o uso primário de energias renováveis cresça em torno de 60% nos próximos 30 anos. Segundo a multinacional British Petroleum, esse aumento será uma resposta inevitável à queda das fontes que dependem de combustíveis fósseis. Não é à toa que a empresa investiu mais de um bilhão de dólares em usinas de energia eólica dos Estados Unidos. Uma decisão estratégica que não ignora a força ainda maior que a energia renovável terá no futuro."
+                )
+
+elif st.session_state.selected_option == 'stock':
+    st.title("Analisando o estoque mundial de petróleo")
+
+    st.markdown("A oferta e demanda estão completamente ligadas ao preço do petróleo, caos haja muito petróleo em estoque não há necessidade de comprar/vender mais petróleo acarretando em um menor demanda portanto em um preço menor por barril.")
+
+    stock_data = get_petroleum_stock()
+    df3 = pd.DataFrame(stock_data['response']['data'])
+    df3 = df3[["period", "productName", "value"]]
+    df3['value'] = pd.to_numeric(df3['value'], errors='coerce')
+
+    df3.sort_values('period', inplace=True)
+
+    # Criando um gráfico de linhas com Plotly
+    fig = px.line(df3, x='period', y='value',
+                  title='Stock de petroleo ao Longo do Tempo')
+
+    # Personalizando o layout do gráfico
+    fig.update_layout(xaxis_title='Data', yaxis_title='Valor')
+
+    # Exibindo o gráfico
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("Excesso de Oferta: Quando os estoques de petróleo estão constantemente aumentando, isso pode indicar um excesso de oferta no mercado. Um excesso de oferta significa que há mais petróleo disponível do que a demanda do mercado pode absorver, levando geralmente a uma queda nos preços.\n\n"
+                "Pressão nos Preços à Vista: O aumento do estoque de petróleo pode criar pressão descendente nos preços do petróleo à vista (spot prices). Os preços à vista refletem as condições de oferta e demanda imediatas e são influenciados pela disponibilidade de petróleo no curto prazo.\n\n"
+                "Redução da Capacidade de Armazenamento: Se os estoques atingirem níveis muito altos e a capacidade de armazenamento estiver próxima do limite, os produtores podem ser forçados a vender o petróleo a preços mais baixos para evitar custos adicionais associados ao armazenamento.\n\n"
+                "Decisões da OPEP e Outros Produtores: A Organização dos Países Exportadores de Petróleo (OPEP) e outros grandes produtores de petróleo frequentemente ajustam sua produção em resposta às condições do mercado. Se os estoques estiverem altos e os preços estiverem sob pressão, a OPEP e outros produtores podem considerar a redução da produção para equilibrar o mercado e sustentar os preços.\n\n"
+                "Expectativas do Mercado: Os participantes do mercado, como investidores e traders, frequentemente reagem às informações sobre os estoques de petróleo. Se os estoques estiverem aumentando constantemente, isso pode influenciar as expectativas do mercado sobre os futuros movimentos dos preços, levando a uma venda antecipada e à queda dos preços.\n\n"
+                "É importante observar que outros fatores também influenciam os preços do petróleo, como eventos geopolíticos, mudanças na demanda global, condições econômicas e desenvolvimentos tecnológicos. Além disso, os mercados de petróleo são frequentemente voláteis e podem ser afetados por eventos imprevistos. Assim, a relação entre os estoques de petróleo e os preços é complexa e dinâmica.")
+
+    st.image("assets/oferta_demanda.jpg")
+
+elif st.session_state.selected_option == 'consumption':
+    consumption_data = get_consumption()
+    df4 = pd.DataFrame(consumption_data['response']['data'])
+    df4 = df4[["period", "productName", "value"]]
+    df4['value'] = pd.to_numeric(df4['value'], errors='coerce')
+
+    df4.sort_values('period', inplace=True)
+
+    # Criando um gráfico de linhas com Plotly
+    fig = px.line(df4, x='period', y='value',
+                  title='Consumo de petroleo ao Longo do Tempo')
+
+    # Personalizando o layout do gráfico
+    fig.update_layout(xaxis_title='Data', yaxis_title='Valor')
+
+    # Exibindo o gráfico
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("#### Como o consumo de petróleo afeta o valor do petróleo? - Demanda e Oferta\n\n"
+                "Ao final de 2019, as condições da indústria mundial do petróleo indicavam a continuidade, no curto prazo, da dinâmica até então vigente – um equilíbrio tênue entre oferta e demanda que manteve os preços spot do petróleo Brent em relativa estabilidade, oscilando entre US$ 60/b e US$ 70/b. Contudo, os primeiros meses de 2020 foram marcados por eventos relevantes que acarretaram variações significativas nos preços internacionais do petróleo.\n\n"
+                "Medidas de distanciamento social e restrições à mobilidade, visando à redução da circulação de pessoas, têm sido amplamente adotadas em grande parte do mundo como prevenção à pandemia de Covid-19. Embora variem em espectro, tais ações têm impactado a mobilidade, com consequências sobre consumo, serviços e atividade industrial, reduzindo o nível da atividade econômica mundial. Assim, a pandemia tem infligido efeitos consideráveis sobre a demanda mundial de petróleo. As atividades dos transportes rodoviários de passageiros e aéreo foram as mais afetadas pela ampla adoção de medidas de restrição à mobilidade no mundo, levando a reduções históricas no consumo global de gasolina e de querosene de aviação (QAV) (IEA, 2020a).\n\n"
+                "Ao mesmo tempo em que a demanda foi severamente impactada, a indústria do petróleo observou alterações na dinâmica da oferta mundial. O acordo para limitar a produção entre países-membros da Organização dos Países Exportadores de Petróleo (OPEP) e outros grandes produtores, em especial a Rússia, não foi renovado no início de março de 2020. Em abril, a Arábia Saudita anunciou o aumento da sua produção para mais de 12 milhões b/d, retomando a política de disputa de mercado. Em seguida, a OPEP+ (grupo formado pelos membros da OPEP, Rússia e outros países produtores) fechou acordo para a redução da sua oferta de petróleo, inicialmente com cortes de 9,7 milhões b/d a partir de maio. Simultaneamente, retrações adicionais de produção foram observadas em outros países, com destaque para Estados Unidos e Canadá (IEA, 2020a).\n\n"
+                "Com os impactos da pandemia mundial de Covid-19 e as disputas por mercado entre os grandes produtores da OPEP+, os preços do petróleo Brent recuaram para menos de US 20/b em abril. A partir de maio, com o apoio de significativos cortes de produção nos países da OPEP+, os preços do Brent se estabilizaram em um patamar de US 40/b (EIA, 2020a).")
