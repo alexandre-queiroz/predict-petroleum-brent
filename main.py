@@ -583,19 +583,10 @@ elif st.session_state.selected_option == 'predict':
     merged_df3['Month'] = pd.to_datetime(merged_df3['MonthYear']).dt.month
     merged_df3.drop('MonthYear', axis=1, inplace=True)
 
-    import random
-
     # Loop que executa 100 vezes
-    for _ in range(100):
+    for _ in range(60):
         last_prediction = model.predict(
             merged_df3.iloc[-1:].drop(['Value'], axis=1))
-
-        # Defina o intervalo do multiplicador
-        min_multiplier = -0.02
-        max_multiplier = 0.02
-
-        # Gere um multiplicador aleatório dentro do intervalo
-        multiplier = random.uniform(min_multiplier, max_multiplier)
 
         # Calcular a média móvel dos últimos 7 e 30 dias e aplicar o multiplicador
         sma_7 = merged_df3['Value'].iloc[-7:].mean()
@@ -621,7 +612,7 @@ elif st.session_state.selected_option == 'predict':
 
         base_linha = {
             'Date': merged_df3.iloc[-1]["Date"] + 1,
-            'Value': last_prediction[0] * (1 + multiplier),
+            'Value': last_prediction[0],
             'Year': merged_df3.iloc[-1]["Year"],
             'SMA_7': sma_7,
             'SMA_30': sma_30,
@@ -700,7 +691,7 @@ elif st.session_state.selected_option == 'predict':
     fig.add_trace(go.Scatter(
         x=df_graph.index, y=df_graph['Predicted'], mode='lines', name='Previsto', line=dict(color='orange')))
 
-    fig.update_layout(title='Comparação entre Valores Reais e Valores Previstos (Próximos 100 dias)',
+    fig.update_layout(title='Comparação entre Valores Reais e Valores Previstos (Próximos 60 dias)',
                       xaxis_title='Data',
                       yaxis_title='Preço por barril (US$)',
                       legend_title='Legenda',
@@ -715,11 +706,29 @@ elif st.session_state.selected_option == 'predict':
 elif st.session_state.selected_option == 'decision':
     st.title("Tomada de Decisão")
 
-    st.markdown("#### Como o consumo de petróleo afeta o valor do petróleo? - Demanda e Oferta\n\n"
-                "Ao final de 2019, as condições da indústria mundial do petróleo indicavam a continuidade, no curto prazo, da dinâmica até então vigente – um equilíbrio tênue entre oferta e demanda que manteve os preços spot do petróleo Brent em relativa estabilidade, oscilando entre US$ 60/b e US$ 70/b. Contudo, os primeiros meses de 2020 foram marcados por eventos relevantes que acarretaram variações significativas nos preços internacionais do petróleo.\n\n"
-                "Medidas de distanciamento social e restrições à mobilidade, visando à redução da circulação de pessoas, têm sido amplamente adotadas em grande parte do mundo como prevenção à pandemia de Covid-19. Embora variem em espectro, tais ações têm impactado a mobilidade, com consequências sobre consumo, serviços e atividade industrial, reduzindo o nível da atividade econômica mundial. Assim, a pandemia tem infligido efeitos consideráveis sobre a demanda mundial de petróleo. As atividades dos transportes rodoviários de passageiros e aéreo foram as mais afetadas pela ampla adoção de medidas de restrição à mobilidade no mundo, levando a reduções históricas no consumo global de gasolina e de querosene de aviação (QAV) (IEA, 2020a).\n\n"
-                "Ao mesmo tempo em que a demanda foi severamente impactada, a indústria do petróleo observou alterações na dinâmica da oferta mundial. O acordo para limitar a produção entre países-membros da Organização dos Países Exportadores de Petróleo (OPEP) e outros grandes produtores, em especial a Rússia, não foi renovado no início de março de 2020. Em abril, a Arábia Saudita anunciou o aumento da sua produção para mais de 12 milhões b/d, retomando a política de disputa de mercado. Em seguida, a OPEP+ (grupo formado pelos membros da OPEP, Rússia e outros países produtores) fechou acordo para a redução da sua oferta de petróleo, inicialmente com cortes de 9,7 milhões b/d a partir de maio. Simultaneamente, retrações adicionais de produção foram observadas em outros países, com destaque para Estados Unidos e Canadá (IEA, 2020a).\n\n"
-                "Com os impactos da pandemia mundial de Covid-19 e as disputas por mercado entre os grandes produtores da OPEP+, os preços do petróleo Brent recuaram para menos de US 20/b em abril. A partir de maio, com o apoio de significativos cortes de produção nos países da OPEP+, os preços do Brent se estabilizaram em um patamar de US 40/b (EIA, 2020a).")
+    st.markdown(
+        "#### Para auxiliar na tomada de decisão, realizamos quatro tipos de análises:")
+
+    st.markdown("1. Análise do preço do petróleo\n"
+                "2. Análise do uso de energia renovável\n"
+                "3. Análise do estoque de petróleo\n"
+                "4. Análise do consumo de petróleo\n")
+
+    st.markdown("Com base em nossa análise preditiva, que contempla os próximos 100 dias, observarmos que o valor se manterá estável, ou seja, dentro do valor médio no período de Fevereiro a Maio de 2024, enquanto no período de Dezembro a Janeiro, o valor sofre uma deflação.")
+
+    st.markdown("É importante ressaltar que o valor pode sofrer diversas alterações, devido a uma gama de variáveis, conforme as análises realizadas, como crises econômicas, eventos geopoliticos, mudanças na demanda global, condições economicas e desenvolvimentos técnologicos, conforme citado anteriormente.")
+
+    st.markdown("Além disso, com o aumento do consumo de energia renovável, pode existir um impacto, mesmo que não muito significativo.")
+
+    st.markdown(
+        "Como também o impacto do aumento do estoque do petróleo que pode fazer com que a oferta supere a demanda.")
+
+    st.title("Conclusão")
+
+    st.markdown(
+        "De forma geral, recomendariamos que a compra do petróleo fosse realizada no periodo de baixa do valor, conforme análise preditiva, e caso necessário, a venda no periodo de estabilidade, ou aumento do valor. Considerando os fatores acima, e acompanhando a evolução do mercado.")
+
+    st.markdown("É importante ressaltar que informações como OPEP, OCDE, bem como noticias do mercado mundial devem ser acompanhadas diariamente")
 
 elif st.session_state.selected_option == 'more':
     st.title("Sobre nós")
